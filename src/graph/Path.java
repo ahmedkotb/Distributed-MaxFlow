@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class Path implements Cloneable {
 	private List<Edge> edges;
+	
+	int flow;
 
 	public Path() {
 		edges = new ArrayList<Edge>();
@@ -18,6 +20,10 @@ public class Path implements Cloneable {
 			this.extend(new Edge(c));
 	}
 	
+	public int getFlow() {
+		return flow;
+	}
+
 	public void concatenate(Path p) {
 		// TODO
 	}
@@ -25,6 +31,8 @@ public class Path implements Cloneable {
 	public void extend(Edge e) {
 		//TODO: avoid cycles
 		edges.add(e);
+		
+		this.flow = Math.min(this.flow, e.getFlow());
 	}
 
 	public String toString() {
