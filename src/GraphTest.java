@@ -10,7 +10,10 @@ public class GraphTest {
 		//     n1 ====> n2 ====> n3 ====> n4
 		//        -e1      -e2   ||  -e3
 		//                       ||
+		//                   -e4 || e4
+		//                       ||
 		//                       n5
+		
 		
 		Node n1 = new Node(1);
 		Node n2 = new Node(2);
@@ -18,16 +21,27 @@ public class GraphTest {
 		Node n4 = new Node(4);
 		Node n5 = new Node(5);
 		
+		//create forward edges
 		Edge e1 = new Edge(1, n2.getId(), 1, 2);
 		Edge e2 = new Edge(2, n3.getId(), 2, 3);
 		Edge e3 = new Edge(3, n4.getId(), 3, 4);
 		Edge e4 = new Edge(4, n5.getId(), 4, 5);
 		
-		n1.addEdge(e1);
-		n2.addEdge(e2);
-		n3.addEdge(e3);
-		n3.addEdge(e4);
+		//create Inverse Edges
+		Edge e1i = new Edge(1, n1.getId(), 1, 2); e1i.setIncoming(true);
+		Edge e2i = new Edge(2, n2.getId(), 2, 3); e2i.setIncoming(true);
+		Edge e3i = new Edge(3, n3.getId(), 3, 4); e3i.setIncoming(true);
+		Edge e4i = new Edge(4, n3.getId(), 4, 5); e4i.setIncoming(true);
 		
+		//add forward edges
+		n1.addEdge(e1); n2.addEdge(e2);
+		n3.addEdge(e3); n3.addEdge(e4);
+		
+		//add incoming edges
+		n2.addEdge(e1i); n3.addEdge(e2i);
+		n5.addEdge(e4i); n4.addEdge(e3i);
+		
+		//create paths
 		Path p1 = new Path(); p1.extend(e1); n2.addSourcePath(p1);
 		Path p2 = p1.clone(); p2.extend(e2); n3.addSourcePath(p2);
 		Path p3 = p2.clone(); p3.extend(e3); n4.addSourcePath(p3);
@@ -58,11 +72,11 @@ public class GraphTest {
 	
 	public void testWrite() {
 		
-		String text = "(1	||(1,2,1,2))\n" +
-					  "(2	((1,2,1,2))|((-1,3,13,15)>(-2,2,4,20))|(2,3,2,3))\n" +
-				      "(3	((1,2,1,2)>(2,3,2,3))|((-1,3,13,15))|(3,4,3,4);(4,5,4,5))\n" +
-					  "(4	((1,2,1,2)>(2,3,2,3)>(3,4,3,4))||)\n" +
-				      "(5	||)\n";
+		String text = "(1	||(1,2,1,2,false))\n" +
+					  "(2	((1,2,1,2,false))|((-1,3,13,15,false)>(-2,2,4,20,false))|(2,3,2,3,false);(1,1,1,2,true))\n" +
+				      "(3	((1,2,1,2,false)>(2,3,2,3,false))|((-1,3,13,15,false))|(3,4,3,4,false);(4,5,4,5,false);(2,2,2,3,true))\n" +
+					  "(4	((1,2,1,2,false)>(2,3,2,3,false)>(3,4,3,4,false))||(3,3,3,4,true))\n" +
+				      "(5	||(4,3,4,5,true))\n";
 		
 		String[] lines = text.split("\n");
 		for (String l : lines) {

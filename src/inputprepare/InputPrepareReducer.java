@@ -1,4 +1,4 @@
-package mapred;
+package inputprepare;
 
 import graph.Edge;
 import graph.Node;
@@ -15,10 +15,10 @@ import org.apache.hadoop.mapred.Reducer;
 import org.apache.hadoop.mapred.Reporter;
 
 public class InputPrepareReducer extends MapReduceBase
-		implements Reducer<LongWritable, LongWritable, NullWritable, Text> {
+		implements Reducer<LongWritable, Text, NullWritable, Text> {
 
 	@Override
-	public void reduce(LongWritable key, Iterator<LongWritable> values,
+	public void reduce(LongWritable key, Iterator<Text> values,
 			OutputCollector<NullWritable, Text> output, Reporter reporter)
 			throws IOException {
 		
@@ -27,14 +27,21 @@ public class InputPrepareReducer extends MapReduceBase
 		
 		while (values.hasNext()) {
 			// did == destination id
-			long did = values.next().get();
+			String eInfoStr = values.next().toString();
 			
-			//edge id
-			//TODO fix this
-			// example eid = id * number of nodes + did   (i*n +j)
-			long eid = 101;
+			String[] eInfo = eInfoStr.split(",");
 			
-			n.addEdge(new Edge(eid, did, 0, 1));
+			long eid = Long.parseLong(eInfo[1]);
+			
+			if (eInfo[2].equals("f")) {
+				long did = Long.parseLong(eInfo[0]);
+				n.addEdge(new Edge(eid, did, 0, 1));
+			}else if (eInfo[2].equals("i")) {
+				long sid = Long.parseLong(eInfo[0]);
+				Edge e = new Edge(eid, sid, 0,1);
+				e.setIncoming(true);
+				n.addEdge(e);
+			}
 		}
 		
 		Text txt = new Text(n.toString());
