@@ -2,7 +2,7 @@ package maxflow;
 
 import graph.*;
 
-public interface Accumulator {
+public interface AccumulatorIF {
 	
 	public boolean accept(Path p);
 }
