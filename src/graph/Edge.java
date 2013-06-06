@@ -1,6 +1,7 @@
 package graph;
 
 public class Edge {
+	
 	private long id;
 	private long toNodeId;
 	private int flow;
@@ -61,13 +62,13 @@ public class Edge {
 		if (getClass() != obj.getClass())
 			return false;
 		Edge other = (Edge) obj;
-		if (capacity != other.capacity)
+		if (id != other.id)
+			return false;	
+		if (toNodeId != other.toNodeId)
 			return false;
 		if (flow != other.flow)
 			return false;
-		if (id != other.id)
-			return false;
-		if (toNodeId != other.toNodeId)
+		if (capacity != other.capacity)
 			return false;
 		return true;
 	}

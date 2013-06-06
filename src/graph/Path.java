@@ -23,6 +23,7 @@ public class Path implements Cloneable {
 	}
 
 	public void extend(Edge e) {
+		//TODO: avoid cycles
 		edges.add(e);
 	}
 
