@@ -1,15 +1,21 @@
 package graph;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Path implements Cloneable {
+	
 	private List<Edge> edges;
+	
+	private Set<Long> visitedNodes;
 	
 	int flow;
 
 	public Path() {
 		edges = new ArrayList<Edge>();
+		visitedNodes = new HashSet<Long>();
 	}
 
 	public Path(String str) {
@@ -24,15 +30,34 @@ public class Path implements Cloneable {
 		return flow;
 	}
 
-	public void concatenate(Path p) {
-		// TODO
+	public Path concatenate(Path p) {
+		//TODO: check for common edges between the two paths
+		// in case the function was used in any time other than the end (from src to end)
+		// also set the visited node to union of the two sets
+		
+		Path newPath = this.clone();
+		
+		for (Edge e : p.edges)
+			newPath.extend(e);
+			
+		newPath.flow = Math.min(this.flow, p.flow);
+		
+		return newPath;
 	}
 
-	public void extend(Edge e) {
-		//TODO: avoid cycles
+	public boolean extend(Edge e) {
+		
+		//check if edge is already in the path
+		if (visitedNodes.contains(e.getToNodeId()))
+			return false;
+		
+		visitedNodes.add(e.getToNodeId());
 		edges.add(e);
 		
+		// adjust the minium flow
 		this.flow = Math.min(this.flow, e.getFlow());
+		
+		return true;
 	}
 
 	public String toString() {
@@ -79,9 +104,16 @@ public class Path implements Cloneable {
 	}
 
 	public Path clone() {
+		
 		Path p = new Path();
+		
 		for (Edge e : edges)
 			p.extend(e);
+		
+		for (long id : visitedNodes)
+			p.visitedNodes.add(id);
+		
+		p.flow = this.flow;
 		
 		return p;
 	}
