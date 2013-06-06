@@ -1,10 +1,9 @@
-package mapred;
+package inputprepare;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
@@ -16,7 +15,7 @@ import org.apache.hadoop.util.ToolRunner;
 
 public class InputPrepare extends Configured implements Tool {
 
-	static final String inputDir = "/user/hduser/maxflow/raw_input";
+	static final String inputDir = "/user/hduser/maxflow/raw_input/simple";
 	static final String outputDir = "/user/hduser/maxflow/input";
 	
 	public static void main(String[] args) throws Exception {
@@ -27,16 +26,16 @@ public class InputPrepare extends Configured implements Tool {
 	@Override
 	public int run(String[] args) throws Exception {
 		JobClient client = new JobClient();
-		JobConf conf = new JobConf(mapred.InputPrepare.class);
+		JobConf conf = new JobConf(inputprepare.InputPrepare.class);
 
 		conf.setOutputKeyClass(LongWritable.class);
-		conf.setOutputValueClass(LongWritable.class);
+		conf.setOutputValueClass(Text.class);
 
 		FileInputFormat.setInputPaths(conf, new Path(inputDir));
 		FileOutputFormat.setOutputPath(conf, new Path(outputDir));
 
-		conf.setMapperClass(mapred.InputPrepareMapper.class);
-		conf.setReducerClass(mapred.InputPrepareReducer.class);
+		conf.setMapperClass(inputprepare.InputPrepareMapper.class);
+		conf.setReducerClass(inputprepare.InputPrepareReducer.class);
 
 		client.setConf(conf);
 		
