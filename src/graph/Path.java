@@ -1,5 +1,6 @@
 package graph;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -27,6 +28,10 @@ public class Path implements Cloneable {
 		edges.add(e);
 	}
 
+	public Iterator<Edge> getEdges(){
+		return edges.iterator();
+	}
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
