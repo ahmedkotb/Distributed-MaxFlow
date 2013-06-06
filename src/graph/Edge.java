@@ -58,6 +58,15 @@ public class Edge {
 		return capacity;
 	}
 
+	public void augment(int deltaFlow) {
+		if (this.flow + deltaFlow < this.capacity)
+			this.flow += deltaFlow;
+	}
+	
+	public boolean isSaturated() {
+		return this.flow >= this.capacity;
+	}
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
