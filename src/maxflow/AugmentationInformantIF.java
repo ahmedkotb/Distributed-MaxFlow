@@ -1,6 +1,6 @@
 package maxflow;
 
-public interface AugmentationInfromantIF {
+public interface AugmentationInformantIF {
 	/**
 	 * searches the augmented edges in the previous round for the edgeID and
 	 * returns the flow augmented through it
