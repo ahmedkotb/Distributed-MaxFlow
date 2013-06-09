@@ -66,6 +66,10 @@ public class Node {
 		return edges;
 	}
 
+	public void setEdges(List<Edge> edges){
+		this.edges = edges;
+	}
+	
 	public void addSourcePath(Path p) {
 		this.sourcePaths.add(p);
 	}

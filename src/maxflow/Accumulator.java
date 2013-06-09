@@ -2,6 +2,8 @@ package maxflow;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
+//import java.util.Set;
 
 import graph.Edge;
 import graph.Path;
@@ -9,6 +11,7 @@ import graph.Path;
 public class Accumulator implements AccumulatorIF{
 
 	private HashMap<Long, Integer> flowMap;
+	private int size = 0;
 	
 	public Accumulator(){
 		flowMap = new HashMap<Long, Integer>();
@@ -40,6 +43,17 @@ public class Accumulator implements AccumulatorIF{
 			flowMap.put(e.getId(), flow+pathFlow);
 		}
 		
+		size++;
 		return true;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public Iterator<Entry<Long, Integer>> getFlowMapIterator(){
+		return flowMap.entrySet().iterator();
 	}
 }
