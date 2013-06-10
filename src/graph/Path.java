@@ -1,10 +1,11 @@
 package graph;
 
-import java.util.Iterator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
+
+import maxflow.MaxFlowSettings;
 
 public class Path implements Cloneable {
 	
@@ -17,10 +18,13 @@ public class Path implements Cloneable {
 	public Path() {
 		edges = new ArrayList<Edge>();
 		visitedNodes = new HashSet<Long>();
+		flow = MaxFlowSettings.INFINITY;
 	}
 
 	public Path(String str) {
 		edges = new ArrayList<Edge>();
+		visitedNodes = new HashSet<Long>();
+		flow = MaxFlowSettings.INFINITY;
 		String body = str.substring(1, str.length()-1);
 		String[] components = body.split(">");
 		for (String c : components)
@@ -56,16 +60,18 @@ public class Path implements Cloneable {
 		edges.add(e);
 		
 		// adjust the minium flow
-		this.flow = Math.min(this.flow, e.getFlow());
+		this.flow = Math.min(this.flow, e.getResidualCapacity());
 		
 		return true;
 	}
 
-	public Iterator<Edge> getEdges(){
-		return edges.iterator();
+	public List<Edge> getEdges(){
+		return edges;
 	}
 	
 	public String toString() {
+		if(edges.size() == 0) return "";
+		
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("(");

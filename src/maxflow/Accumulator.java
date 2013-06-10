@@ -12,6 +12,7 @@ public class Accumulator implements AccumulatorIF{
 
 	private HashMap<Long, Integer> flowMap;
 	private int size = 0;
+	private int flow = 0;
 	
 	public Accumulator(){
 		flowMap = new HashMap<Long, Integer>();
@@ -19,7 +20,7 @@ public class Accumulator implements AccumulatorIF{
 	
 	@Override
 	public boolean accept(Path p) {
-		Iterator<Edge> itr = p.getEdges();
+		Iterator<Edge> itr = p.getEdges().iterator();
 		Edge e;
 		int pathFlow = p.getFlow();
 		
@@ -32,7 +33,7 @@ public class Accumulator implements AccumulatorIF{
 		}
 		
 		//accept the path and increase edges flow in the accumulator
-		itr = p.getEdges();
+		itr = p.getEdges().iterator();
 		while(itr.hasNext()){
 			e = itr.next();
 			Integer flow = flowMap.get(e.getId());
@@ -42,7 +43,8 @@ public class Accumulator implements AccumulatorIF{
 			//XXX access the map twice vs get a reference and update it
 			flowMap.put(e.getId(), flow+pathFlow);
 		}
-		
+	
+		flow+= p.getFlow();
 		size++;
 		return true;
 	}
@@ -55,5 +57,10 @@ public class Accumulator implements AccumulatorIF{
 	@Override
 	public Iterator<Entry<Long, Integer>> getFlowMapIterator(){
 		return flowMap.entrySet().iterator();
+	}
+
+	@Override
+	public int getFlow() {
+		return flow;
 	}
 }

@@ -11,5 +11,7 @@ public interface AccumulatorIF {
 	
 	public int size();
 	
+	public int getFlow();
+	
 	public Iterator<Entry<Long, Integer>> getFlowMapIterator();
 }

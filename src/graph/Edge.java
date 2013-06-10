@@ -58,6 +58,10 @@ public class Edge {
 		return capacity;
 	}
 
+	public int getResidualCapacity(){
+		return capacity - flow;
+	}
+	
 	public void augment(int deltaFlow) {
 		if (this.flow + deltaFlow < this.capacity)
 			this.flow += deltaFlow;
@@ -116,7 +120,5 @@ public class Edge {
 		if (capacity != other.capacity)
 			return false;
 		return true;
-	}
-	
-	
+	}	
 }

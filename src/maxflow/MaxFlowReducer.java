@@ -68,17 +68,21 @@ public class MaxFlowReducer extends MapReduceBase implements Reducer<LongWritabl
 		if(oldMaster.getSinkPaths().size() == 0 && sinkAcc.size() > 0)
 			reporter.incrCounter(MaxFlowSettings.counters.SINK_MOVE, 1);
 		
-		if(key.get() == MaxFlowSettings.SINK_NODE_ID)
+		if(key.get() == MaxFlowSettings.SINK_NODE_ID){
+			reporter.incrCounter(MaxFlowSettings.counters.AUGMENTED_FLOW, tAcc.getFlow());
 			generateAugmentationFile(tAcc);
+		}
 		
 		collector.collect(NullWritable.get(), new Text(newMaster.toString()));
 	}
 
 	public void generateAugmentationFile(Accumulator acc){
 		try{
-			String outputFile = MaxFlowSettings.OUTPUT_PATH + "/augmentedEdges[" + "" + "]";
+			String outputFile = MaxFlowSettings.MAXFLOW_PATH + "/augmentedEdges[" + MaxFlowSettings.currentRound + "]";
 			org.apache.hadoop.fs.Path pt = new org.apache.hadoop.fs.Path(outputFile);
-            FileSystem fs = FileSystem.get(new Configuration());
+			Configuration conf = new Configuration();
+			conf.addResource(new org.apache.hadoop.fs.Path("/usr/local/hadoop/conf/core-site.xml"));
+            FileSystem fs = FileSystem.get(conf);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fs.create(pt,true)));
 
             Iterator<Entry<Long, Integer>> itr = acc.getFlowMapIterator();

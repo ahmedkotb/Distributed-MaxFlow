@@ -3,6 +3,8 @@ package graph;
 import java.util.ArrayList;
 import java.util.List;
 
+import maxflow.MaxFlowSettings;
+
 
 public class Node {
 	
@@ -17,6 +19,11 @@ public class Node {
 		sourcePaths = new ArrayList<Path>();
 		sinkPaths = new ArrayList<Path>();
 		edges = new ArrayList<Edge>();
+		
+		if(this.id == MaxFlowSettings.SRC_NODE_ID)
+			sourcePaths.add(new Path());
+		else if(this.id == MaxFlowSettings.SINK_NODE_ID)
+			sinkPaths.add(new Path());
 	}
 	
 	public Node(String str) {
@@ -48,6 +55,10 @@ public class Node {
 				this.addEdge(new Edge(s));
 			}
 		
+		if(this.id == MaxFlowSettings.SRC_NODE_ID)
+			sourcePaths.add(new Path());
+		else if(this.id == MaxFlowSettings.SINK_NODE_ID)
+			sinkPaths.add(new Path());		
 	}
 	
 	public long getId() {
@@ -71,6 +82,8 @@ public class Node {
 	}
 	
 	public void addSourcePath(Path p) {
+		if(this.id == MaxFlowSettings.SRC_NODE_ID)
+			return;
 		this.sourcePaths.add(p);
 	}
 	
@@ -79,6 +92,8 @@ public class Node {
 	}
 	
 	public void addSinkPath(Path p) {
+		if(this.id == MaxFlowSettings.SINK_NODE_ID)
+			return;
 		this.sinkPaths.add(p);
 	}
 	
