@@ -38,7 +38,7 @@ public class InputPrepareReducer extends MapReduceBase
 				n.addEdge(new Edge(eid, did, 0, 1));
 			}else if (eInfo[2].equals("i")) {
 				long sid = Long.parseLong(eInfo[0]);
-				Edge e = new Edge(eid, sid, 0,1);
+				Edge e = new Edge(eid, sid, 0, 1);
 				e.setIncoming(true);
 				n.addEdge(e);
 			}

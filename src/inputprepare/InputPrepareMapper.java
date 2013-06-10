@@ -41,6 +41,11 @@ public class InputPrepareMapper extends MapReduceBase
 			//emit incoming edge to node V
 			outIds.set(sid + "," + eid + ",i");
 			output.collect(new LongWritable(did), outIds);
+			
+			//emit negative augmentation edge
+			outIds.set(sid + "," + (-1 * eid) + ",f");
+			output.collect(new LongWritable(did), outIds);
+			
 		}
 		
 	}
