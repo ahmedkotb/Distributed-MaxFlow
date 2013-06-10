@@ -28,7 +28,7 @@ public class MaxFlowMapper extends MapReduceBase implements
 		List<Edge> edges = u.getEdges();
 
 		// TODO augment edges and remove saturated excess paths
-		String augFilePath = "augmentedEdges[" + MaxFlowSettings.currentRound + "]";
+		String augFilePath = MaxFlowSettings.OUTPUT_PATH + "/augmentedEdges[" + (MaxFlowSettings.currentRound - 1) + "]";
 		AugmentationInformantIF informant = new AugmentationInformant(augFilePath);
 		
 		int srcPathsSize = srcPaths.size();
