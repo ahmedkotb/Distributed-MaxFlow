@@ -19,6 +19,9 @@ public class InputPrepare extends Configured implements Tool {
 
 //	static final String inputDir = "/user/hduser/maxflow/raw_input/simple";
 //	static final String outputDir = "/user/hduser/maxflow/input";
+
+	static final String inputDir = MaxFlowSettings.INPUT_PATH + "/raw_input/simple";
+	static final String outputDir = MaxFlowSettings.INPUT_PATH;
 	
 //	public static void main(String[] args) throws Exception {
 //		int res = ToolRunner.run(new Configuration(), new InputPrepare(), args);
@@ -33,8 +36,8 @@ public class InputPrepare extends Configured implements Tool {
 		conf.setOutputKeyClass(LongWritable.class);
 		conf.setOutputValueClass(Text.class);
 
-		FileInputFormat.setInputPaths(conf, new Path(MaxFlowSettings.INPUT_PATH));
-		FileOutputFormat.setOutputPath(conf, new Path(MaxFlowSettings.OUTPUT_PATH));
+		FileInputFormat.setInputPaths(conf, new Path(inputDir));
+		FileOutputFormat.setOutputPath(conf, new Path(outputDir));
 
 		conf.setMapperClass(inputprepare.InputPrepareMapper.class);
 		conf.setReducerClass(inputprepare.InputPrepareReducer.class);
