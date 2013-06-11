@@ -35,15 +35,11 @@ public class InputPrepareMapper extends MapReduceBase
 			long eid = (sid - 1) * NUMBER_OF_NODES + did;
 			
 			//emit forward edge from node U
-			outIds.set(did + "," + eid + ",f");
+			outIds.set(did + "," + eid);
 			output.collect(new LongWritable(sid), outIds);
-			
-			//emit incoming edge to node V
-			outIds.set(sid + "," + eid + ",i");
-			output.collect(new LongWritable(did), outIds);
-			
+						
 			//emit negative augmentation edge
-			outIds.set(sid + "," + (-1 * eid) + ",f");
+			outIds.set(sid + "," + (-1 * eid));
 			output.collect(new LongWritable(did), outIds);
 			
 		}

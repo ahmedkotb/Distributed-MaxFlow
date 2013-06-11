@@ -31,17 +31,9 @@ public class InputPrepareReducer extends MapReduceBase
 			
 			String[] eInfo = eInfoStr.split(",");
 			
-			long eid = Long.parseLong(eInfo[1]);
-			
-			if (eInfo[2].equals("f")) {
-				long did = Long.parseLong(eInfo[0]);
-				n.addEdge(new Edge(eid, did, 0, 1));
-			}else if (eInfo[2].equals("i")) {
-				long sid = Long.parseLong(eInfo[0]);
-				Edge e = new Edge(eid, sid, 0, 1);
-				e.setIncoming(true);
-				n.addEdge(e);
-			}
+			long eid = Long.parseLong(eInfo[1]);			
+			long did = Long.parseLong(eInfo[0]);
+			n.addEdge(new Edge(eid, did, 0, 1));
 		}
 		
 		Text txt = new Text(n.toString());

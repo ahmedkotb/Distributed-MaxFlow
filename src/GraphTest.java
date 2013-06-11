@@ -28,10 +28,10 @@ public class GraphTest {
 		Edge e4 = new Edge(4, n5.getId(), 4, 5);
 		
 		//create Inverse Edges
-		Edge e1i = new Edge(1, n1.getId(), 1, 2); e1i.setIncoming(true);
-		Edge e2i = new Edge(2, n2.getId(), 2, 3); e2i.setIncoming(true);
-		Edge e3i = new Edge(3, n3.getId(), 3, 4); e3i.setIncoming(true);
-		Edge e4i = new Edge(4, n3.getId(), 4, 5); e4i.setIncoming(true);
+		Edge e1i = new Edge(1, n1.getId(), 1, 2);
+		Edge e2i = new Edge(2, n2.getId(), 2, 3);
+		Edge e3i = new Edge(3, n3.getId(), 3, 4);
+		Edge e4i = new Edge(4, n3.getId(), 4, 5);
 		
 		//add forward edges
 		n1.addEdge(e1); n2.addEdge(e2);

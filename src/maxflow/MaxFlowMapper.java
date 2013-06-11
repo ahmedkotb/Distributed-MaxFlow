@@ -3,8 +3,6 @@ package maxflow;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.MapReduceBase;
@@ -61,9 +59,10 @@ public class MaxFlowMapper extends MapReduceBase implements
 			collector.collect(tKey, new Text(t.toString()));
 		}
 		
+		//extending source excess paths
 		if(srcPathsSize > 0){
 			for(Edge e : edges){
-				if(!e.isIncoming() && !e.isSaturated()){
+				if(!e.isSaturated()){
 					Path p = srcPaths.get(srcPathsIndex).clone();
 					if(p.extend(e)){
 						srcPathsIndex = (srcPathsIndex + 1) % srcPathsSize;
@@ -75,13 +74,15 @@ public class MaxFlowMapper extends MapReduceBase implements
 			}
 		}
 		
+		//extending sink excess paths
 		if(sinkPathsSize > 0){
 			for(Edge e : edges){
-				if(e.isIncoming() && !e.isSaturated()){
+				Edge re = e.getReversedEdge(u.getId());
+				if(!re.isSaturated()){
 					Path p = sinkPaths.get(sinkPathsIndex).clone();
-					if(p.extend(e)){
+					if(p.extend(re)){
 						sinkPathsIndex = (sinkPathsIndex + 1) % sinkPathsSize;
-						Node v = new Node(e.getToNodeId());
+						Node v = new Node(e.getToNodeId()); //e not re
 						v.addSinkPath(p);
 						collector.collect(new LongWritable(v.getId()), new Text(v.toString()));
 					}
@@ -94,29 +95,29 @@ public class MaxFlowMapper extends MapReduceBase implements
 	}
 
 	private Integer augmentAux(long eid, AugmentationInformantIF informant){
-		Integer flow = informant.getAugmentedFlow(eid);
-		if(flow != null) return flow;
+		int flow = informant.getAugmentedFlow(eid);
+		if(flow != 0) return flow;
 
 		flow = informant.getAugmentedFlow(-1*eid);
-		if(flow != null) return -1*flow;
+		if(flow != 0) return -1*flow;
 		
-		return null;
+		return 0;
 	}
 	
 	private void augment(Node u, AugmentationInformantIF informant){
 		System.out.println("Constructing the residual graph for node: " + u.getId() + " ...");
 		System.out.println("Augmenting edges in edge list ...");
 		for(Edge e : u.getEdges()){
-			Integer flow = augmentAux(e.getId(), informant);
-			if(flow != null)
+			int flow = augmentAux(e.getId(), informant);
+			if(flow != 0)
 				e.augment(flow);
 		}
 		
 		System.out.println("Augmenting edges in source paths ...");
 		for(int i = u.getSourcePaths().size()-1; i>=0; --i){
 			for(Edge e : u.getSourcePaths().get(i).getEdges()){
-				Integer flow = augmentAux(e.getId(), informant);
-				if(flow != null){
+				int flow = augmentAux(e.getId(), informant);
+				if(flow != 0){
 					e.augment(flow);
 					if(e.isSaturated()){
 						u.removeSourcePath(i);
@@ -129,8 +130,8 @@ public class MaxFlowMapper extends MapReduceBase implements
 		System.out.println("Augmenting edges in sink paths ...");
 		for(int i = u.getSinkPaths().size()-1; i>=0; --i){
 			for(Edge e : u.getSinkPaths().get(i).getEdges()){
-				Integer flow = augmentAux(e.getId(), informant);
-				if(flow != null){
+				int flow = augmentAux(e.getId(), informant);
+				if(flow != 0){
 					e.augment(flow);
 					if(e.isSaturated()){
 						u.removeSinkPath(i);

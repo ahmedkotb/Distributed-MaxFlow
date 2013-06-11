@@ -8,14 +8,11 @@ public class Edge {
 	private int flow;
 	private int capacity;
 	
-	private boolean isIncoming;
-	
 	public Edge(long id, long toNodeId, int flow, int capacity) {
 		this.id = id;
 		this.toNodeId = toNodeId;
 		this.flow = flow;
 		this.capacity = capacity;
-		isIncoming = false;
 	}
 	
 	public Edge(String str) {
@@ -26,8 +23,6 @@ public class Edge {
 		this.toNodeId = Long.parseLong(info[1]);
 		this.flow = Integer.parseInt(info[2]);
 		this.capacity = Integer.parseInt(info[3]);
-		
-		this.isIncoming = Boolean.parseBoolean(info[4]);
 	}
 
 	public long getId() {
@@ -41,14 +36,6 @@ public class Edge {
 	public void setFlow(int flow) {
 		this.flow = flow;
 	}
-
-	public boolean isIncoming() {
-		return isIncoming;
-	}
-
-	public void setIncoming(boolean isIncoming) {
-		this.isIncoming = isIncoming;
-	}
 	
 	public long getToNodeId() {
 		return toNodeId;
@@ -60,6 +47,10 @@ public class Edge {
 
 	public int getResidualCapacity(){
 		return capacity - flow;
+	}
+
+	public Edge getReversedEdge(long srcNodeId){
+		return new Edge(-1*this.id, srcNodeId, -1*flow, capacity);
 	}
 	
 	public void augment(int deltaFlow) {
@@ -83,8 +74,6 @@ public class Edge {
 		sb.append(flow);
 		sb.append(",");
 		sb.append(capacity);
-		sb.append(",");
-		sb.append(isIncoming);
 		
 		sb.append(")");
 		
