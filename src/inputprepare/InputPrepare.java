@@ -15,17 +15,9 @@ import org.apache.hadoop.util.Tool;
 
 public class InputPrepare extends Configured implements Tool {
 
-//	static final String inputDir = "/user/hduser/maxflow/raw_input/simple";
-//	static final String outputDir = "/user/hduser/maxflow/input";
-
 	static final String inputDir = MaxFlowSettings.MAXFLOW_PATH + "/raw_input/test2";
 	static final String outputDir = MaxFlowSettings.MAXFLOW_PATH + "/round_0";
 	
-//	public static void main(String[] args) throws Exception {
-//		int res = ToolRunner.run(new Configuration(), new InputPrepare(), args);
-//		System.exit(res);	
-//	}
-
 	@Override
 	public int run(String[] args) throws Exception {
 		JobClient client = new JobClient();
