@@ -91,6 +91,10 @@ public class Node {
 		sourcePaths.remove(p);
 	}
 	
+	public void removeSourcePath(int index){
+		sourcePaths.remove(index);
+	}
+	
 	public void addSinkPath(Path p) {
 		if(this.id == MaxFlowSettings.SINK_NODE_ID)
 			return;
@@ -99,6 +103,10 @@ public class Node {
 	
 	public void removeSinkPath(Path p) {
 		sinkPaths.remove(p);
+	}
+	
+	public void removeSinkPath(int index){
+		this.sinkPaths.remove(index);
 	}
 	
 	public void addEdge(Edge e) {
@@ -120,29 +128,31 @@ public class Node {
 		sb.append("\t");
 		
 		//Source Paths
-		int i = 0;
+		boolean first=true;
 		for (Path p : sourcePaths) {
-			sb.append(p);
-			if (i != sourcePaths.size() - 1)
-				sb.append(";");
-			i++;
+			if(p != null){
+				if(!first) sb.append(";");
+				else first = false;
+				sb.append(p);
+			}
 		}
 		
 		sb.append("|");
 		
 		//Sink Paths
-		i = 0;
+		first = true;
 		for (Path p : sinkPaths) {
-			sb.append(p);
-			if (i != sinkPaths.size() - 1)
-				sb.append(";");
-			i++;
+			if(p != null){
+				if(!first) sb.append(";");
+				else first = false;
+				sb.append(p);
+			}
 		}
 		
 		sb.append("|");
 		
 		//Edges
-		i = 0;
+		int i = 0;
 		for (Edge e : edges) {
 			sb.append(e);
 			if (i != edges.size() - 1)

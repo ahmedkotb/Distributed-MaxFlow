@@ -63,7 +63,7 @@ public class Edge {
 	}
 	
 	public void augment(int deltaFlow) {
-		if (this.flow + deltaFlow < this.capacity)
+		if (this.flow + deltaFlow <= this.capacity)
 			this.flow += deltaFlow;
 	}
 	

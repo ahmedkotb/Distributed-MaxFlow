@@ -27,8 +27,8 @@ public class Accumulator implements AccumulatorIF{
 		//check for the capacity constraint
 		while(itr.hasNext()){
 			e = itr.next();
-			Integer flow = flowMap.get(e.getId());
-			if(flow != null && flow + pathFlow > e.getCapacity())
+			Integer prevFlow = flowMap.get(e.getId());
+			if(prevFlow != null && prevFlow + pathFlow > e.getCapacity())
 				return false;
 		}
 		
