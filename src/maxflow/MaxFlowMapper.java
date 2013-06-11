@@ -28,20 +28,20 @@ public class MaxFlowMapper extends MapReduceBase implements
 		List<Path> sinkPaths = u.getSinkPaths();
 		List<Edge> edges = u.getEdges();
 
-		
+		//reading augmentedEdges file, and augmenting flow
 		if(MaxFlowSettings.currentRound > 1){
 			System.out.println("Reading augmentedEdges[" + (MaxFlowSettings.currentRound-1) + "] from distributed cache ...");
 			String augFilePath = MaxFlowSettings.MAXFLOW_PATH + "/augmentedEdges[" + (MaxFlowSettings.currentRound - 1) + "]";
 			AugmentationInformantIF informant = new AugmentationInformant(augFilePath);
-			augment(u, informant);
+			augmentNode(u, informant);
 		}
-		
 		
 		int srcPathsSize = srcPaths.size();
 		int sinkPathsSize = sinkPaths.size();
 		int srcPathsIndex = 0;
 		int sinkPathsIndex = 0;
 		
+		//checking for complete augmenting paths
 		if(srcPathsSize > 0 && sinkPathsSize > 0){
 			Node t = new Node(MaxFlowSettings.SINK_NODE_ID);
 			LongWritable tKey = new LongWritable(t.getId());
@@ -77,7 +77,7 @@ public class MaxFlowMapper extends MapReduceBase implements
 		//extending sink excess paths
 		if(sinkPathsSize > 0){
 			for(Edge e : edges){
-				Edge re = e.getReversedEdge(u.getId());
+				Edge re = e.getReversedEdge(u.getId()); //reversed edge
 				if(!re.isSaturated()){
 					Path p = sinkPaths.get(sinkPathsIndex).clone();
 					if(p.extend(re)){
@@ -94,7 +94,14 @@ public class MaxFlowMapper extends MapReduceBase implements
 		collector.collect(new LongWritable(u.getId()), new Text(u.toString()));
 	}
 
-	private Integer augmentAux(long eid, AugmentationInformantIF informant){
+	/**
+	 * Encapsulates the +flow vs -flow part. It queries augmentedEdges for this edge or its reversed counterpart
+	 * and returns +dflow or -dflow correspondingly
+	 * @param eid Edge id
+	 * @param informant Responsible for querying augmented edges from the previous round
+	 * @return delta flow that needs to be augmented for edge(eid), or 0 if this edge is not augmented
+	 */
+	private Integer getAugmentedFlow(long eid, AugmentationInformantIF informant){
 		int flow = informant.getAugmentedFlow(eid);
 		if(flow != 0) return flow;
 
@@ -103,44 +110,47 @@ public class MaxFlowMapper extends MapReduceBase implements
 		
 		return 0;
 	}
-	
-	private void augment(Node u, AugmentationInformantIF informant){
-		System.out.println("Constructing the residual graph for node: " + u.getId() + " ...");
-		System.out.println("Augmenting edges in edge list ...");
+
+	/**
+	 * Constructs the residual node by augmenting all edges, and removing saturated excess paths
+	 * @param u Graph node to augment
+	 * @param informant Responsible for querying augmented edges from the previous round
+	 */
+	private void augmentNode(Node u, AugmentationInformantIF informant){
+		
+		//Augmenting edges in edge list
 		for(Edge e : u.getEdges()){
-			int flow = augmentAux(e.getId(), informant);
+			int flow = getAugmentedFlow(e.getId(), informant);
 			if(flow != 0)
 				e.augment(flow);
 		}
 		
-		System.out.println("Augmenting edges in source paths ...");
+		//Augmenting edges in source paths
 		for(int i = u.getSourcePaths().size()-1; i>=0; --i){
 			for(Edge e : u.getSourcePaths().get(i).getEdges()){
-				int flow = augmentAux(e.getId(), informant);
+				int flow = getAugmentedFlow(e.getId(), informant);
 				if(flow != 0){
 					e.augment(flow);
 					if(e.isSaturated()){
 						u.removeSourcePath(i);
-						break;
+						break; //no need to complete this path
 					}
 				}
 			}
 		}
 		
-		System.out.println("Augmenting edges in sink paths ...");
+		//Augmenting edges in sink paths
 		for(int i = u.getSinkPaths().size()-1; i>=0; --i){
 			for(Edge e : u.getSinkPaths().get(i).getEdges()){
-				int flow = augmentAux(e.getId(), informant);
+				int flow = getAugmentedFlow(e.getId(), informant);
 				if(flow != 0){
 					e.augment(flow);
 					if(e.isSaturated()){
 						u.removeSinkPath(i);
-						break;
+						break; //no need to complete this path
 					}
 				}
 			}
 		}
-		
-		System.out.println("Augmentation setp completed successfully!");
 	}
 }

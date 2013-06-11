@@ -10,9 +10,9 @@ import graph.Path;
 
 public class Accumulator implements AccumulatorIF{
 
-	private HashMap<Long, Integer> flowMap;
-	private int size = 0;
-	private int flow = 0;
+	private HashMap<Long, Integer> flowMap; //<EdgeID, aggregatedFlowThroughEdge>
+	private int size = 0; //number of paths accepted by this accumulator
+	private int flow = 0; //total flow (aggregation of flow of accepted paths)
 	
 	public Accumulator(){
 		flowMap = new HashMap<Long, Integer>();
@@ -46,6 +46,7 @@ public class Accumulator implements AccumulatorIF{
 	
 		flow+= p.getFlow();
 		size++;
+		
 		return true;
 	}
 

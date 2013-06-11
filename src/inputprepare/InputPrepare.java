@@ -2,7 +2,6 @@ package inputprepare;
 
 import maxflow.MaxFlowSettings;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -13,15 +12,14 @@ import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.RunningJob;
 import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
 
 public class InputPrepare extends Configured implements Tool {
 
 //	static final String inputDir = "/user/hduser/maxflow/raw_input/simple";
 //	static final String outputDir = "/user/hduser/maxflow/input";
 
-	static final String inputDir = MaxFlowSettings.INPUT_PATH + "/raw_input/simple";
-	static final String outputDir = MaxFlowSettings.INPUT_PATH;
+	static final String inputDir = MaxFlowSettings.MAXFLOW_PATH + "/raw_input/test2";
+	static final String outputDir = MaxFlowSettings.MAXFLOW_PATH + "/round_0";
 	
 //	public static void main(String[] args) throws Exception {
 //		int res = ToolRunner.run(new Configuration(), new InputPrepare(), args);

@@ -9,10 +9,8 @@ import maxflow.MaxFlowSettings;
 
 public class Path implements Cloneable {
 	
-	private List<Edge> edges;
-	
+	private List<Edge> edges;	
 	private Set<Long> visitedNodes;
-	
 	int flow;
 
 	public Path() {
@@ -59,7 +57,7 @@ public class Path implements Cloneable {
 		visitedNodes.add(e.getToNodeId());
 		edges.add(e);
 		
-		// adjust the minium flow
+		// adjust the minimum flow
 		this.flow = Math.min(this.flow, e.getResidualCapacity());
 		
 		return true;
@@ -69,6 +67,7 @@ public class Path implements Cloneable {
 		return edges;
 	}
 	
+	@Override
 	public String toString() {
 		if(edges.size() == 0) return "";
 		

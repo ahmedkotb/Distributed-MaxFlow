@@ -1,7 +1,6 @@
 package maxflow;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -11,16 +10,23 @@ import org.apache.hadoop.fs.FileSystem;
 
 public class AugmentationInformant implements AugmentationInformantIF{
 
-	private HashMap<Long, Integer> flowMap;
+	private HashMap<Long, Integer> flowMap; //<EdgeID, aggregatedFlowThroughEdge> tuples representing augmentedEdges[round-1] file
 	
+	/**
+	 * Constructor: reads augmentedEdges file and populates the flowMap with it
+	 * @param filePath HDFS path for augmentedEdges[round-1] file
+	 * @throws IOException
+	 */
 	public AugmentationInformant(String filePath) throws IOException{
-		org.apache.hadoop.fs.Path pt = new org.apache.hadoop.fs.Path(filePath);
+		org.apache.hadoop.fs.Path path = new org.apache.hadoop.fs.Path(filePath);
+
+		//setting up configuration for the filesystem
 		Configuration conf = new Configuration();
 		conf.addResource(new org.apache.hadoop.fs.Path("/usr/local/hadoop/conf/core-site.xml"));
         FileSystem fs = FileSystem.get(conf);
         
-		BufferedReader bf = new BufferedReader(new InputStreamReader(fs.open(pt)));
-//		BufferedReader bf = new BufferedReader(new FileReader(filePath));
+        //read augmentedEdges file
+		BufferedReader bf = new BufferedReader(new InputStreamReader(fs.open(path)));
 		flowMap = new HashMap<Long, Integer>();
 		String line;
 		String[] toks;

@@ -53,15 +53,16 @@ public class Edge {
 		return new Edge(-1*this.id, srcNodeId, -1*flow, capacity);
 	}
 	
+	//this function doesn't do any validation
 	public void augment(int deltaFlow) {
-		if (this.flow + deltaFlow <= this.capacity)
-			this.flow += deltaFlow;
+		this.flow += deltaFlow;
 	}
 	
 	public boolean isSaturated() {
 		return this.flow >= this.capacity;
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		

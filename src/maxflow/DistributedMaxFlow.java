@@ -3,11 +3,8 @@ package maxflow;
 import inputprepare.InputPrepare;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -28,6 +25,7 @@ public class DistributedMaxFlow {
 //		conf.setCombinerClass(theClass); //TODO: can you come up with a good combiner?
 		conf.setReducerClass(MaxFlowReducer.class);
 		
+		//add file to distributed cache //TODO
 //		if(MaxFlowSettings.currentRound > 1){
 //			String augmentedEdgesPath = MaxFlowSettings.MAXFLOW_PATH + "/[" + (MaxFlowSettings.currentRound-1) + "]";
 //			try {
@@ -37,6 +35,7 @@ public class DistributedMaxFlow {
 //				e.printStackTrace();
 //			}
 //		}
+
 		String inDir = MaxFlowSettings.MAXFLOW_PATH + "/round_" + (MaxFlowSettings.currentRound-1);
 		String outDir = MaxFlowSettings.MAXFLOW_PATH + "/round_" + (MaxFlowSettings.currentRound);
 		FileInputFormat.setInputPaths(conf, inDir);
@@ -47,6 +46,8 @@ public class DistributedMaxFlow {
 	
 	public void run() throws IOException{
 		//TODO: check if the input graph is already created, then don't call InputPrepare
+
+		//creating a flow network out of the input graph
 		try {
 			System.out.println("Round #0: Preparing input graph");
 			ToolRunner.run(new Configuration(), new InputPrepare(), null);
@@ -59,14 +60,20 @@ public class DistributedMaxFlow {
 		
 		MaxFlowSettings.currentRound = 1;
 		long totalFlow = 0;
+
+		//Main loop: chained map reduce jobs
 		while(true){
-			System.out.println("Running: Round #" + MaxFlowSettings.currentRound + " ...");
+			System.out.println("Running: Round #" + MaxFlowSettings.currentRound);
 			JobConf conf = configureJob();
-			RunningJob job = JobClient.runJob(conf); //this waits till job finishes
+			RunningJob job = JobClient.runJob(conf); //this call waits till job finishes
+			
 			Counters counters = job.getCounters();
+			
+			//incrementing total flow
 			long flow = counters.getCounter(MaxFlowSettings.counters.AUGMENTED_FLOW);
 			totalFlow += flow; 
 			
+			//checking for termination condition
 			long sourceMoveCounter = counters.getCounter(MaxFlowSettings.counters.SOURCE_MOVE);
 			long sinkMoveCounter = counters.getCounter(MaxFlowSettings.counters.SINK_MOVE);
 
