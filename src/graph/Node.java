@@ -1,6 +1,7 @@
 package graph;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import maxflow.MaxFlowSettings;
@@ -12,13 +13,14 @@ public class Node {
 	private List<Path> sourcePaths;
 	private List<Path> sinkPaths;
 	private List<Edge> edges;
-	
+	private HashSet<Long> visitedNeighbours;
 	
 	public Node(long id) {
 		this.id = id;
 		sourcePaths = new ArrayList<Path>();
 		sinkPaths = new ArrayList<Path>();
 		edges = new ArrayList<Edge>();
+		visitedNeighbours = new HashSet<Long>();
 		
 		if(this.id == MaxFlowSettings.SRC_NODE_ID)
 			sourcePaths.add(new Path());
@@ -31,6 +33,7 @@ public class Node {
 		sourcePaths = new ArrayList<Path>();
 		sinkPaths = new ArrayList<Path>();
 		edges = new ArrayList<Edge>();
+		visitedNeighbours = new HashSet<Long>();
 		
 		String body = str.substring(1, str.length() - 1);
 		String[] mainInfo = body.split("\t");
@@ -85,28 +88,49 @@ public class Node {
 		if(this.id == MaxFlowSettings.SRC_NODE_ID)
 			return;
 		this.sourcePaths.add(p);
+		
+		for(Edge e : p.getExtendingEdges())
+			visitedNeighbours.add(e.getToNodeId());
 	}
 	
+	@Deprecated
 	public void removeSourcePath(Path p) {
 		sourcePaths.remove(p);
+		
+		for(Edge e : p.getExtendingEdges())
+			visitedNeighbours.remove(e.getToNodeId());
 	}
 	
 	public void removeSourcePath(int index){
+		Path p = sourcePaths.get(index);
 		sourcePaths.remove(index);
+		
+		for(Edge e : p.getExtendingEdges())
+			visitedNeighbours.remove(e.getToNodeId());
 	}
 	
 	public void addSinkPath(Path p) {
 		if(this.id == MaxFlowSettings.SINK_NODE_ID)
 			return;
 		this.sinkPaths.add(p);
+		for(Edge e : p.getExtendingEdges())
+			visitedNeighbours.add(e.getToNodeId());
 	}
-	
+
+	@Deprecated
 	public void removeSinkPath(Path p) {
 		sinkPaths.remove(p);
+		
+		for(Edge e : p.getExtendingEdges())
+			visitedNeighbours.remove(e.getToNodeId());
 	}
 	
 	public void removeSinkPath(int index){
+		Path p = sinkPaths.get(index);
 		this.sinkPaths.remove(index);
+		
+		for(Edge e : p.getExtendingEdges())
+			visitedNeighbours.remove(e.getToNodeId());
 	}
 	
 	public void addEdge(Edge e) {
@@ -115,6 +139,18 @@ public class Node {
 	
 	public void removeEdge(Edge e) {
 		edges.remove(e);
+	}
+	
+	public boolean isVisitedNeighbour(Long vertexId){
+		return visitedNeighbours.contains(vertexId);
+	}
+	
+	public void visitNeighbour(Long vertexId){
+		visitedNeighbours.add(vertexId);
+	}
+	
+	public void freeNeighbour(Long vertexId){
+		visitedNeighbours.remove(vertexId);
 	}
 
 	@Override

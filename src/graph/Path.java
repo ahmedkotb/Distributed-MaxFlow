@@ -11,22 +11,36 @@ public class Path implements Cloneable {
 	
 	private List<Edge> edges;	
 	private Set<Long> visitedNodes;
-	int flow;
+	private ArrayList<Edge> extendingEdges;
+	private int flow;
 
 	public Path() {
 		edges = new ArrayList<Edge>();
 		visitedNodes = new HashSet<Long>();
 		flow = MaxFlowSettings.INFINITY;
+		extendingEdges = new ArrayList<Edge>();
 	}
 
 	public Path(String str) {
 		edges = new ArrayList<Edge>();
 		visitedNodes = new HashSet<Long>();
 		flow = MaxFlowSettings.INFINITY;
+		extendingEdges = new ArrayList<Edge>();
+		
 		String body = str.substring(1, str.length()-1);
-		String[] components = body.split(">");
+		String[] toks = body.split(":");
+
+		//parsing the edges of the path
+		String[] components = toks[0].split(">");
 		for (String c : components)
 			this.extend(new Edge(c));
+		
+		//parsing extending edges
+		if(toks.length > 1){
+			components = toks[1].split(";");
+			for (String c : components)
+				extendingEdges.add(new Edge(c));
+		}
 	}
 	
 	public int getFlow() {
@@ -56,13 +70,25 @@ public class Path implements Cloneable {
 		
 		visitedNodes.add(e.getToNodeId());
 		edges.add(e);
-		
 		// adjust the minimum flow
 		this.flow = Math.min(this.flow, e.getResidualCapacity());
 		
 		return true;
 	}
 
+	//doesn't check for loops
+	public void addExtendingEdge(Edge e){
+		this.extendingEdges.add(e);
+	}
+	
+//	public boolean hasExtendingEdge(Long edgeId){
+//		return extendingEdges.contains(edgeId);
+//	}
+	
+	public List<Edge> getExtendingEdges(){
+		return extendingEdges;
+	}
+	
 	public List<Edge> getEdges(){
 		return edges;
 	}
@@ -81,6 +107,16 @@ public class Path implements Cloneable {
 			if (i != edges.size()-1)
 				sb.append(">");
 			i++;
+		}
+		
+		//emitting extending edges
+		sb.append(":");
+		boolean first = true;
+		for(Edge e : extendingEdges){
+			if(!first) sb.append(";");
+			else first = false;
+			
+			sb.append(e);
 		}
 		
 		sb.append(")");

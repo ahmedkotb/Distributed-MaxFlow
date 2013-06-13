@@ -62,9 +62,10 @@ public class MaxFlowMapper extends MapReduceBase implements
 		//extending source excess paths
 		if(srcPathsSize > 0){
 			for(Edge e : edges){
-				if(!e.isSaturated()){
+				if(!e.isSaturated() && !u.isVisitedNeighbour(e.getToNodeId())){
 					Path p = srcPaths.get(srcPathsIndex).clone();
 					if(p.extend(e)){
+						u.visitNeighbour(e.getToNodeId());
 						srcPathsIndex = (srcPathsIndex + 1) % srcPathsSize;
 						Node v = new Node(e.getToNodeId());
 						v.addSourcePath(p);
@@ -127,30 +128,59 @@ public class MaxFlowMapper extends MapReduceBase implements
 		
 		//Augmenting edges in source paths
 		for(int i = u.getSourcePaths().size()-1; i>=0; --i){
+			boolean pathRemoved = false;
 			for(Edge e : u.getSourcePaths().get(i).getEdges()){
 				int flow = getAugmentedFlow(e.getId(), informant);
 				if(flow != 0){
 					e.augment(flow);
 					if(e.isSaturated()){
 						u.removeSourcePath(i);
+						pathRemoved = true;
 						break; //no need to complete this path
 					}
+				}
+			}
+			
+			if(pathRemoved)
+				continue;
+			//Augmenting extending edges
+			for(Edge e : u.getSourcePaths().get(i).getExtendingEdges()){
+				int flow = getAugmentedFlow(e.getId(), informant);
+				if(flow != 0){
+					e.augment(flow);
+					if(e.isSaturated())
+						u.freeNeighbour(e.getToNodeId());
 				}
 			}
 		}
 		
 		//Augmenting edges in sink paths
 		for(int i = u.getSinkPaths().size()-1; i>=0; --i){
+			boolean pathRemoved = false;
 			for(Edge e : u.getSinkPaths().get(i).getEdges()){
 				int flow = getAugmentedFlow(e.getId(), informant);
 				if(flow != 0){
 					e.augment(flow);
 					if(e.isSaturated()){
 						u.removeSinkPath(i);
+						pathRemoved = true;
 						break; //no need to complete this path
 					}
 				}
 			}
+			
+			if(pathRemoved)
+				continue;
+			//Augmenting extending edges
+			for(Edge e : u.getSinkPaths().get(i).getExtendingEdges()){
+				int flow = getAugmentedFlow(e.getId(), informant);
+				if(flow != 0){
+					e.augment(flow);
+					if(e.isSaturated())
+						u.freeNeighbour(e.getToNodeId());
+				}
+			}
+
 		}
 	}
 }

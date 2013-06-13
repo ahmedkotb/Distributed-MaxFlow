@@ -47,13 +47,15 @@ public class MaxFlowReducer extends MapReduceBase implements Reducer<LongWritabl
 				//XXX beware of the == (should be .equals() to be be valid if we changed the ID data type)
 				if(u.getId() == MaxFlowSettings.SINK_NODE_ID) //augmenting path
 					tAcc.accept(p);
-				else if(srcAcc.size() < MaxFlowSettings.K && srcAcc.accept(p))
+//				else if(srcAcc.size() < MaxFlowSettings.K && srcAcc.accept(p))
+				else if(srcAcc.accept(p))
 					newMaster.addSourcePath(p);
 			}
 			
 			//merge and filter sink excess paths
 			for(Path p : u.getSinkPaths()){
-				if(sinkAcc.size() < MaxFlowSettings.K && sinkAcc.accept(p))
+//				if(sinkAcc.size() < MaxFlowSettings.K && sinkAcc.accept(p))
+				if(sinkAcc.accept(p))
 					newMaster.addSinkPath(p);
 			}	
 		}
