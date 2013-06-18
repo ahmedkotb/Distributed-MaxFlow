@@ -89,7 +89,7 @@ public class MaxFlowReducer extends MapReduceBase implements Reducer<LongWritabl
 			//setting up configuration for the filesystem
 			org.apache.hadoop.fs.Path pt = new org.apache.hadoop.fs.Path(outputFile);
 			Configuration conf = new Configuration();
-			conf.addResource(new org.apache.hadoop.fs.Path("/usr/local/hadoop/conf/core-site.xml"));
+			conf.addResource(new org.apache.hadoop.fs.Path(MaxFlowSettings.HADOOP_CORE_SITE_PATH));
             
 			FileSystem fs = FileSystem.get(conf);
             

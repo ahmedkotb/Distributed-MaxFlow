@@ -22,7 +22,7 @@ public class AugmentationInformant implements AugmentationInformantIF{
 
 		//setting up configuration for the filesystem
 		Configuration conf = new Configuration();
-		conf.addResource(new org.apache.hadoop.fs.Path("/usr/local/hadoop/conf/core-site.xml"));
+		conf.addResource(new org.apache.hadoop.fs.Path(MaxFlowSettings.HADOOP_CORE_SITE_PATH));
         FileSystem fs = FileSystem.get(conf);
         
         //read augmentedEdges file

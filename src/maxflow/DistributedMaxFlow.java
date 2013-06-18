@@ -16,7 +16,7 @@ public class DistributedMaxFlow {
 	private JobConf configureJob(){
 		JobConf conf = new JobConf();
 		conf.setJobName("maxflow");
-		conf.addResource(new org.apache.hadoop.fs.Path("/usr/local/hadoop/conf/core-site.xml"));
+		conf.addResource(new org.apache.hadoop.fs.Path(MaxFlowSettings.HADOOP_CORE_SITE_PATH));
 		
 		conf.setOutputKeyClass(LongWritable.class);
 		conf.setOutputValueClass(Text.class);
@@ -50,7 +50,10 @@ public class DistributedMaxFlow {
 		//creating a flow network out of the input graph
 		try {
 			System.out.println("Round #0: Preparing input graph");
-			ToolRunner.run(new Configuration(), new InputPrepare(), null);
+			Configuration conf = new Configuration();
+			conf.addResource(new org.apache.hadoop.fs.Path("/usr/local/hadoop/conf/core-site.xml"));
+
+			ToolRunner.run(conf, new InputPrepare(), null);
 		} catch (Exception e) {
 			System.err.println("Failed to prepare input graph. Terminating the Job!");
 			e.printStackTrace();

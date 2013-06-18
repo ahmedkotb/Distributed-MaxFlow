@@ -15,19 +15,18 @@ import org.apache.hadoop.util.Tool;
 
 public class InputPrepare extends Configured implements Tool {
 
-	static final String inputDir = MaxFlowSettings.MAXFLOW_PATH + "/raw_input/test2";
-	static final String outputDir = MaxFlowSettings.MAXFLOW_PATH + "/round_0";
-	
 	@Override
 	public int run(String[] args) throws Exception {
 		JobClient client = new JobClient();
 		JobConf conf = new JobConf(inputprepare.InputPrepare.class);
+		
+		conf.addResource(new org.apache.hadoop.fs.Path(MaxFlowSettings.HADOOP_CORE_SITE_PATH));
 
 		conf.setOutputKeyClass(LongWritable.class);
 		conf.setOutputValueClass(Text.class);
 
-		FileInputFormat.setInputPaths(conf, new Path(inputDir));
-		FileOutputFormat.setOutputPath(conf, new Path(outputDir));
+		FileInputFormat.setInputPaths(conf, new Path(MaxFlowSettings.INPUT_PATH));
+		FileOutputFormat.setOutputPath(conf, new Path(MaxFlowSettings.OUTPUT_PATH));
 
 		conf.setMapperClass(inputprepare.InputPrepareMapper.class);
 		conf.setReducerClass(inputprepare.InputPrepareReducer.class);

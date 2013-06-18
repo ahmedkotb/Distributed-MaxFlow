@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+    <property>
+      <name>hadoop.tmp.dir</name>
+      <value>/app/hadoop/tmp</value>
+      <description>A base for other temporary directories.</description>
+    </property>
+
+    <property>
+      <name>fs.default.name</name>
+      <value>s3n://maxflowbucket</value>
+    </property>
+
+    <property>
+      <name>fs.s3n.awsAccessKeyId</name>
+      <value>AKIAJQ75VNTZ2V2MG7QA</value>
+    </property>
+
+    <property>
+      <name>fs.s3n.awsSecretAccessKey</name>
+      <value>XyTfOfPzPrwB7i2ow9LVCcsaxpY8032iGULWHlqn</value>
+    </property>
+</configuration>
+
