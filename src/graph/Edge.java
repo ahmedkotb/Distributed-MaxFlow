@@ -44,6 +44,10 @@ public class Edge {
 	public int getCapacity() {
 		return capacity;
 	}
+	
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
 
 	public int getResidualCapacity(){
 		return capacity - flow;

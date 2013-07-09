@@ -12,6 +12,7 @@ public class Node {
 	private List<Path> sourcePaths;
 	private List<Path> sinkPaths;
 	private List<Edge> edges;
+	private NodeColor color;
 	
 	
 	public Node(long id) {
@@ -19,6 +20,7 @@ public class Node {
 		sourcePaths = new ArrayList<Path>();
 		sinkPaths = new ArrayList<Path>();
 		edges = new ArrayList<Edge>();
+		color = NodeColor.WHITE;
 		
 		if(this.id == MaxFlowSettings.SRC_NODE_ID)
 			sourcePaths.add(new Path());
@@ -34,7 +36,10 @@ public class Node {
 		
 		String body = str.substring(1, str.length() - 1);
 		String[] mainInfo = body.split("\t");
-		this.id = Integer.parseInt(mainInfo[0]);
+		
+		String[] nodeIdState = mainInfo[0].split("-");
+		this.id = Integer.parseInt(nodeIdState[0]);
+		this.color = NodeColor.valueOf(nodeIdState[1]);
 		
 		String[] parts = mainInfo[1].split("\\|");
 		
@@ -117,13 +122,25 @@ public class Node {
 		edges.remove(e);
 	}
 
+	
+	public NodeColor getColor() {
+		return color;
+	}
+
+	public void setColor(NodeColor color) {
+		this.color = color;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
 		//ID
 		sb.append("(");
+		
 		sb.append(this.id);
+		sb.append("-");
+		sb.append(this.color.toString());
 		
 		sb.append("\t");
 		
