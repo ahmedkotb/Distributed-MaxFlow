@@ -26,4 +26,5 @@ public class MaxFlowSettings {
 	public static int currentRound = 0;
 	public static final int K = 5; //for FF1: max. number of accepted excess paths
 	public static final int INFINITY = Integer.MAX_VALUE >> 1;
+	public static int NUMBER_OF_NODES = 5;  // TODO
 }

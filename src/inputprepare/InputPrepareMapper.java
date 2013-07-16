@@ -2,6 +2,8 @@ package inputprepare;
 
 import java.io.IOException;
 
+import maxflow.MaxFlowSettings;
+
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.MapReduceBase;
@@ -12,9 +14,6 @@ import org.apache.hadoop.mapred.Reporter;
 public class InputPrepareMapper extends MapReduceBase
 			implements Mapper<LongWritable, Text, LongWritable, Text> {
 	
-	
-	public static final long NUMBER_OF_NODES = 75888;
-
 	@Override
 	public void map(LongWritable lid, Text value,
 			OutputCollector<LongWritable, Text> output, Reporter reporter)
@@ -32,7 +31,7 @@ public class InputPrepareMapper extends MapReduceBase
 			long did = Long.parseLong(nodeInfo[1]) + 1;
 			
 			// edge ID
-			long eid = (sid - 1) * NUMBER_OF_NODES + did;
+			long eid = (sid - 1) * MaxFlowSettings.NUMBER_OF_NODES + did;
 			
 			//emit forward edge from node U
 			outIds.set(did + "," + eid);
