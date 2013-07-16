@@ -12,17 +12,11 @@
 
     <property>
       <name>fs.default.name</name>
-      <value>s3n://maxflowbucket</value>
-    </property>
-
-    <property>
-      <name>fs.s3n.awsAccessKeyId</name>
-      <value>AKIAJQ75VNTZ2V2MG7QA</value>
-    </property>
-
-    <property>
-      <name>fs.s3n.awsSecretAccessKey</name>
-      <value>XyTfOfPzPrwB7i2ow9LVCcsaxpY8032iGULWHlqn</value>
+      <value>hdfs://localhost:54310</value>
+      <description>The name of the default file system.  A URI whose
+      scheme and authority determine the FileSystem implementation.  The
+      uri's scheme determines the config property (fs.SCHEME.impl) naming
+      the FileSystem implementation class.  The uri's authority is used to
+      determine the host, port, etc. for a filesystem.</description>
     </property>
 </configuration>
-

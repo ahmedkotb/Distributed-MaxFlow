@@ -22,7 +22,7 @@ public class MaxFlowMapper extends MapReduceBase implements
 			OutputCollector<LongWritable, Text> collector, Reporter reporter)
 			throws IOException {
 		
-		System.out.println("Reading node ...");
+//		System.out.println("Reading node ...");
 		Node u = new Node(value.toString());
 		List<Path> srcPaths = u.getSourcePaths();
 		List<Path> sinkPaths = u.getSinkPaths();
@@ -30,7 +30,7 @@ public class MaxFlowMapper extends MapReduceBase implements
 
 		//reading augmentedEdges file, and augmenting flow
 		if(MaxFlowSettings.currentRound > 1){
-			System.out.println("Reading augmentedEdges[" + (MaxFlowSettings.currentRound-1) + "] from distributed cache ...");
+//			System.out.println("Reading augmentedEdges[" + (MaxFlowSettings.currentRound-1) + "] from distributed cache ...");
 			String augFilePath = MaxFlowSettings.MAXFLOW_PATH + "/augmentedEdges[" + (MaxFlowSettings.currentRound - 1) + "]";
 			AugmentationInformantIF informant = new AugmentationInformant(augFilePath);
 			augmentNode(u, informant);

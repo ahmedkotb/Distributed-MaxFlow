@@ -13,7 +13,7 @@ public class InputPrepareMapper extends MapReduceBase
 			implements Mapper<LongWritable, Text, LongWritable, Text> {
 	
 	
-	public static final long NUMBER_OF_NODES = 5;
+	public static final long NUMBER_OF_NODES = 75888;
 
 	@Override
 	public void map(LongWritable lid, Text value,
